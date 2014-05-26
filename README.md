@@ -3,6 +3,9 @@ sh-flac
 
 Set of shell utilities to manage [FLAC](https://en.wikipedia.org/wiki/FLAC) collections. Each takes advantage of multi-core systems where possible.
 
+Utilities
+---------
+
 <pre>flacmp3</pre>
 Uses [ffmpeg](https://en.wikipedia.org/wiki/FFmpeg) to convert the FLAC files in the current directory to MP3, placing the new files in their own directory for easy transfer to external players. Quality settings, or indeed output format, easily changed.
 
