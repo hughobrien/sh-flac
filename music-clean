@@ -1,0 +1,6 @@
+#!/bin/sh
+#Find any unwelcome files by using an extension whitelist
+#Hugh O'Brien 2012, obrien.hugh@gmail.com
+
+patterns='(mp3$|flac$|ogg$|wma$|m4a$|s3m$|it$|xm$|mod$|mid$|jpg$|jpeg$|png$|gif$|txt$|log$|pdf$)'
+find . -type f | grep --ignore-case --invert-match --extended-regexp "$patterns"

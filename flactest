@@ -1,0 +1,15 @@
+#!/bin/sh
+#Test flac files, prints out any failing
+#Hugh O'Brien 2013, obrien.hugh@gmail.com
+
+#disk I/O becomes bottleneck
+num_processors=$(nproc)
+
+[ "$num_processors" -gt 2 ] && num_processors=2
+
+nice --adjustment=19 \
+find . -type f -iname '*\.flac' -print0 \
+| sort --zero-terminated \
+| xargs --null --no-run-if-empty \
+	--max-procs="$num_processors" --max-args=1 \
+flactest-sub

@@ -1,0 +1,32 @@
+#Simple flac to mp3 conversion
+#Creates <dirname>-mp3 folder
+#Runs one conversion per CPU
+#Runs conversion on low CPU priority
+#Copies cover, if found
+#Hugh O'Brien 2013, obrien.hugh@gmail.com
+
+[ ! -x /usr/bin/ffmpeg ] && echo "no ffmpeg" && exit
+
+dir=$(pwd)
+basedir=$(basename "$dir")-mp3
+mkdir "$basedir"
+num_processors=$(nproc)
+
+nice --adjustment=19 \
+find . -maxdepth 1 -type f -iname '*\.flac' -print0 \
+| sort --zero-terminated \
+| xargs -I {} --null --verbose --no-run-if-empty \
+	--max-procs="$num_processors" --max-args=1 \
+ffmpeg -loglevel quiet -i '{}' -aq 3 "$basedir/{}.mp3"
+
+for file in cover.jpg cover.png
+do
+	[ -f "$file" ] && cp "$file" "$basedir"
+done
+
+cd "$basedir"
+for file in *.mp3
+do
+	new=$(echo "$file" | sed 's/\.flac//')
+	mv "$file" "$new"
+done

@@ -1,0 +1,4 @@
+#!/bin/sh
+#Sub script to stay emit the filename of any failed decodes
+#Hugh O'Brien 2013, obrien.hugh@gmail.com
+flac --test --totally-silent --warnings-as-errors "$1" || echo "$1"

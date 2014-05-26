@@ -1,0 +1,26 @@
+#Size optimise flac files
+#Keep CPU priority low, run two processes if multi-core detected
+#Hugh O'Brien 2012, obrien.hugh@gmail.com
+
+previous_size=$(du --max-depth=0 | awk '{print $1}')
+
+#disk I/O becomes bottleneck
+num_processors=$(nproc)
+
+[ "$num_processors" -gt 2 ] && num_processors=2
+
+nice --adjustment=19 \
+find . -type f -iname '*\.flac' -print0 \
+| sort --zero-terminated \
+| xargs --null --verbose --no-run-if-empty \
+	--max-procs="$num_processors" --max-args=1 \
+flac --best --verify --force \
+	--replay-gain --silent --warnings-as-errors
+
+current_size=$(du --max-depth=0 | awk '{print $1}')
+reduction=$(echo "$current_size / $previous_size" | bc -l)
+
+echo "Ratio: $reduction"
+
+#list partially converted files
+find . -type f -iname \*"fl-ac"\*

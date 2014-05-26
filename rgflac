@@ -1,0 +1,14 @@
+#Add _album_ ReplayGain data to flac albums
+#Hugh O'Brien 2012, obrien.hugh@gmail.com
+
+#Identify flac folders (albums)
+find . -type f -iname '*\.flac' -exec dirname \{\} \; | uniq > flacdirs
+
+while read line
+do
+	echo "$line"
+	#pass all the related flacs to metaflac
+	metaflac --add-replay-gain "$line"/*.flac
+done < flacdirs
+
+rm flacdirs
